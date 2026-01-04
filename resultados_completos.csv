@@ -1,4 +1,6 @@
-ID,Nombre,Edad,Semestre,Inicio Examen,Fin Examen,Tiempo Total (s),P1 Tiempo (s),P2 Tiempo (s),P3 Tiempo (s),P4 Tiempo (s),P5 Tiempo (s)
-15,Irving,15,1,2025-12-17T00:47:41.199Z,2025-12-17T00:47:46.064Z,5,1,1,1,1,1
-16,Irving Hernández,20,2,2025-12-17T00:59:19.413Z,2025-12-17T00:59:24.235Z,5,2,0,1,1,1
-17,Viridiana,17,3,2025-12-17T01:04:55.448Z,2025-12-17T01:05:00.573Z,5,1,1,1,1,1
+ID,Nombre,Edad,Género,Semestre,Promedio,Perfil Bachillerato,Tiene Equipo,Tiene Internet,Región,Habla Dialecto,Grupo,Inicio Examen,Fin Examen,Tiempo Total (s),P1 Tiempo (s),P2 Tiempo (s),P3 Tiempo (s),P4 Tiempo (s),P5 Tiempo (s),Likert 1,Likert 2,Likert 3,Likert 4,Likert 5,Likert 6,Likert 7,Likert 8,Likert 9,Likert 10
+1,Irving,15,Femenino,9,0.4,Ciencias Sociales,Sí,Sí,Rural,Sí,Grupo 2,2026-01-04T08:10:44.978Z,2026-01-04T08:10:52.856Z,8,5,1,0,1,1,,,,,,,,,,
+2,Viridiana,18,Femenino,7,0.1,Ciencias Sociales,Sí,Sí,Oeste,Sí,Grupo 2,2026-01-04T08:13:25.266Z,2026-01-04T08:13:27.451Z,2,1,0,0,1,0,,,,,,,,,,
+3,Viridiana,18,Femenino,9,0.3,Humanidades,Sí,Sí,Oeste,Sí,Grupo 2,2026-01-04T08:16:14.685Z,2026-01-04T08:30:09.992Z,835,1,2,1,1,1,,,,,,,,,,
+4,Aldo Hdez Miguel,20,Masculino,8,0.6,Ciencias Sociales,Sí,Sí,Oeste,Sí,Grupo 2,2026-01-04T08:39:54.013Z,2026-01-04T08:40:20.769Z,26,10,10,10,10,20,Nada,No tanto,Poco,Poco,Muy poco,Muy poco,Muy poco,Nada,Poco,Muy poco
+5,Juan,45,Femenino,10,9,Físico-Matemáticas,Sí,Sí,Centro,Sí,Grupo 2,2026-01-04T08:49:28.942Z,2026-01-04T08:49:48.866Z,20,20,10,10,20,10,Muy poco,Poco,Poco,Muy poco,Poco,Poco,Muy poco,Muy poco,Poco,Poco

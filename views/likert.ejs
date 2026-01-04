@@ -1,0 +1,42 @@
+<link rel="stylesheet" href="/bootstrap.min.css">
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h3 class="mb-4 text-center">Cuestionario de opinión</h3>
+
+      <form method="POST" action="/likert" class="card shadow-sm p-4">
+        <input type="hidden" name="usuario" value="<%= usuario %>">
+
+        <% preguntasLikert.forEach((pregunta, i) => { %>
+          <div class="mb-5">
+            <label class="form-label d-block mb-3">
+              <span class="badge bg-primary me-2"><%= i + 1 %></span>
+              <strong><%= pregunta %></strong>
+            </label>
+
+            <div class="btn-group w-100" role="group" aria-label="Escala de Likert">
+              <% escalaLikert.forEach((opcion, index) => { %>
+                <input type="radio" 
+                       class="btn-check" 
+                       name="p<%= i + 1 %>" 
+                       id="p<%= i + 1 %>_<%= index %>" 
+                       value="<%= opcion %>" 
+                       required>
+                <label class="btn btn-outline-primary" for="p<%= i + 1 %>_<%= index %>">
+                  <%= opcion %>
+                </label>
+              <% }) %>
+            </div>
+          </div>
+        <% }) %>
+
+        <hr class="my-4">
+        
+        <div class="d-grid">
+          <button class="btn btn-success btn-lg">Finalizar examen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

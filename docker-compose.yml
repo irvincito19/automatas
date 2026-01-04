@@ -3,7 +3,7 @@ services:
   exam-app:
     build: .
     ports:
-      - "3003:3000"
+      - "3003:3003"
     volumes:
       - .:/app
       - /app/node_modules  # ← CRÍTICO: evita sobreescribir node_modules
