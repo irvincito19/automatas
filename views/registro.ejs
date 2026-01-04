@@ -1,0 +1,255 @@
+<link rel="stylesheet" href="/bootstrap.min.css">
+
+<div class="container mt-5">
+
+  <!-- MENSAJE BONITO DE BIENVENIDA -->
+  <div class="alert alert-primary text-center shadow-sm">
+    <h3 class="mb-0">✨ ¡Bienvenido al Sistema de Evaluación! ✨</h3>
+    <p class="mt-2 mb-0">
+      Por favor completa tus datos para comenzar con tu examen.
+    </p>
+  </div>
+
+  <h2 class="text-center mb-4">Registro de Usuario</h2>
+
+  <form method="POST">
+
+    <!-- DATOS PERSONALES -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">📋 Datos Personales</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre completo *</label>
+            <input class="form-control" name="nombre" placeholder="Ej: Juan Pérez López" required>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Edad *</label>
+            <input class="form-control" name="edad" type="number" min="15" max="100" placeholder="18" required>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Género *</label>
+            <select class="form-control" name="genero" required>
+              <option value="">Seleccionar...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+              <option value="Prefiero no decir">Prefiero no decir</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATOS ACADÉMICOS -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">🎓 Datos Académicos</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Semestre *</label>
+            <select class="form-control" name="semestre" required>
+              <option value="">Selecciona el semestre...</option>
+              <option value="1">1° semestre</option>
+              <option value="2">2° semestre</option>
+              <option value="3">3° semestre</option>
+              <option value="4">4° semestre</option>
+              <option value="5">5° semestre</option>
+              <option value="6">6° semestre</option>
+              <option value="7">7° semestre</option>
+              <option value="8">8° semestre</option>
+              <option value="9">9° semestre</option>
+              <option value="10">10° semestre</option>
+            </select>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Promedio de la materia *</label>
+            <div class="input-group">
+              <input class="form-control" name="promedio" type="number" step="0.1" min="0" max="10" placeholder="8.5" required>
+              <span class="input-group-text">/10</span>
+            </div>
+            <small class="form-text text-muted">Escala del 0 al 10</small>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Perfil de bachillerato *</label>
+            <select class="form-control" name="perfil_bachillerato" required>
+              <option value="">Seleccionar...</option>
+              <option value="Físico-Matemáticas">Físico-Matemáticas</option>
+              <option value="Ciencias Biológicas">Ciencias Biológicas</option>
+              <option value="Ciencias Sociales">Ciencias Sociales</option>
+              <option value="Humanidades">Humanidades</option>
+              <option value="Económico-Administrativo">Económico-Administrativo</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN TECNOLÓGICA -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">💻 Información Tecnológica</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">¿Cuenta con equipo de cómputo o laptop? *</label>
+            <div class="mt-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tiene_equipo" value="1" required>
+                <label class="form-check-label">Sí</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tiene_equipo" value="0">
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <label class="form-label">¿Tiene acceso a internet? *</label>
+            <div class="mt-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tiene_internet" value="1" required>
+                <label class="form-check-label">Sí</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tiene_internet" value="0">
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATOS GEOGRÁFICOS Y CULTURALES -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">🌍 Datos Geográficos y Culturales</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Región de procedencia *</label>
+            <select class="form-control" name="region" required>
+              <option value="">Seleccionar...</option>
+              <option value="Centro">Centro</option>
+              <option value="Norte">Norte</option>
+              <option value="Sur">Sur</option>
+              <option value="Este">Este</option>
+              <option value="Oeste">Oeste</option>
+              <option value="Metropolitana">Metropolitana</option>
+              <option value="Rural">Rural</option>
+            </select>
+          </div>
+          
+          <div class="col-md-6 mb-3">
+            <label class="form-label">¿Habla un dialecto (lengua materna)? *</label>
+            <div class="mt-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="habla_dialecto" value="1" required>
+                <label class="form-check-label">Sí</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="habla_dialecto" value="0">
+                <label class="form-check-label">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFORMACIÓN DE GRUPO -->
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0">👥 Grupo de Estudio</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label class="form-label">¿A qué grupo pertenece? *</label>
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="grupo" value="Grupo 1" required>
+                  <label class="form-check-label">Grupo 1</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="grupo" value="Grupo 2">
+                  <label class="form-check-label">Grupo 2</label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="grupo" value="Grupo 3">
+                  <label class="form-check-label">Grupo 3</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTÓN DE ENVÍO -->
+    <div class="text-center mt-4">
+      <button class="btn btn-primary btn-lg px-5" type="submit">
+        <i class="bi bi-play-fill"></i> Comenzar Examen
+      </button>
+      <p class="text-muted mt-2">
+        * Todos los campos son obligatorios
+      </p>
+    </div>
+
+  </form>
+</div>
+
+<!-- Bootstrap Icons (opcional, si quieres iconos) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<style>
+  .form-label {
+    font-weight: 500;
+    color: #495057;
+  }
+  
+  .card-header {
+    font-weight: 600;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 10px;
+  }
+  
+  .form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+</style>

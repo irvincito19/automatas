@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+    <h1 class="mb-4">Resultados de Evaluaciones</h1>
+
+    <a href="/exportar-todo" class="btn btn-success mb-3">Exportar TODO a CSV</a>
+
+    <a href="/borrar-todo" 
+       class="btn btn-danger mb-3"
+       onclick="return confirm('¿Seguro que deseas BORRAR TODA la base de datos? Esto no se puede deshacer.')">
+       Borrar TODA la BD
+    </a>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Semestre</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Tiempo total (s)</th>
+                <th>P1 tiempo</th>
+                <th>P2 tiempo</th>
+                <th>P3 tiempo</th>
+                <th>P4 tiempo</th>
+                <th>P5 tiempo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% filas.forEach(f => { %>
+                <tr>
+                    <td><%= f.id %></td>
+                    <td><%= f.nombre %></td>
+                    <td><%= f.edad %></td>
+                    <td><%= f.semestre %></td>
+                    <td><%= f.inicio_examen %></td>
+                    <td><%= f.fin_examen %></td>
+                    <td><%= f.tiempo_total %></td>
+                    <td><%= f.p1 %> s</td>
+                    <td><%= f.p2 %> s</td>
+                    <td><%= f.p3 %> s</td>
+                    <td><%= f.p4 %> s</td>
+                    <td><%= f.p5 %> s</td>
+
+                    <!-- BOTÓN PARA BORRAR UNA SOLA FILA -->
+                    <td>
+                        <a href="/borrar-usuario/<%= f.id %>" 
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('¿Eliminar esta participación?');">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <a href="/" class="btn btn-primary">Inicio</a>
+
+</body>
+</html>

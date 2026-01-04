@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="/bootstrap.min.css">
+
+<div class="container mt-5">
+  <h3>Pregunta <%= pregunta.id %></h3>
+  <p><%= pregunta.texto %></p>
+
+  <img src="/<%= pregunta.img %>" class="img-fluid mb-3" />
+
+  <form method="POST">
+    <input type="hidden" name="usuario" value="<%= usuario %>">
+    <!--<input class="form-control" name="respuesta" placeholder="Tu respuesta" required><br>-->
+    <button class="btn btn-success">Siguiente</button>
+  </form>
+</div>
