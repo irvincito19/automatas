@@ -190,24 +190,22 @@ app.get("/pregunta/:id", (req, res) => {
 // Guardar respuesta y pasar a la siguiente
 app.post("/pregunta/:id", (req, res) => {
   const usuario = req.body.usuario;
-  const pregunta = req.params.id;
+  const pregunta = parseInt(req.params.id);
   const respuesta = req.body.respuesta;
   const fin = new Date().toISOString();
 
   db.run(
     `UPDATE respuestas SET respuesta=?, fin_pregunta=?
      WHERE usuario_id=? AND pregunta=?`,
-    [respuesta, fin, usuario, pregunta],
-    function(err) {
-      if (err) console.error("Error al guardar respuesta:", err);
-    }
+    [respuesta, fin, usuario, pregunta]
   );
 
-  const siguiente = parseInt(pregunta) + 1;
-  if (siguiente > 5) return res.redirect(`/likert?u=${usuario}`);
-
+  // 👉 SIEMPRE ir primero al Likert post-tarea
   res.redirect(`/likert-pregunta/${pregunta}?u=${usuario}`);
 });
+
+
+// Página Likert final
 
 app.get("/likert", (req, res) => {
   const usuario = req.query.u;
@@ -294,28 +292,44 @@ app.get("/exportar/:u", (req, res) => {
   const userId = req.params.u;
 
   db.all(
-    `SELECT 
-      'Examen' AS tipo,
-      pregunta,
-      respuesta,
-      inicio_pregunta,
-      fin_pregunta
-    FROM respuestas
-    WHERE usuario_id=?
+  `
+  SELECT 
+    'Examen' AS tipo,
+    pregunta,
+    NULL AS item,
+    respuesta,
+    inicio_pregunta,
+    fin_pregunta
+  FROM respuestas
+  WHERE usuario_id=?
 
-    UNION ALL
+  UNION ALL
 
-    SELECT
-      'Likert' AS tipo,
-      pregunta,
-      respuesta,
-      NULL,
-      NULL
-    FROM likert
-    WHERE usuario_id=?
+  SELECT
+    'LikertFinal' AS tipo,
+    pregunta,
+    NULL AS item,
+    respuesta,
+    NULL,
+    NULL
+  FROM likert
+  WHERE usuario_id=?
 
-    ORDER BY tipo, pregunta`,
-    [userId, userId],
+  UNION ALL
+
+  SELECT
+    'LikertPosTarea' AS tipo,
+    pregunta,
+    item,
+    respuesta,
+    NULL,
+    NULL
+  FROM likert_pregunta
+  WHERE usuario_id=?
+
+  ORDER BY tipo, pregunta, item
+  `,
+  [userId, userId, userId],
     (err, rows) => {
       if (err) {
         console.error("Error al obtener respuestas:", err);
@@ -327,6 +341,7 @@ app.get("/exportar/:u", (req, res) => {
         header: [
           { id: "tipo", title: "Tipo" },
           { id: "pregunta", title: "Pregunta" },
+          { id: "item", title: "Item" },
           { id: "respuesta", title: "Respuesta" },
           { id: "inicio_pregunta", title: "Inicio" },
           { id: "fin_pregunta", title: "Fin" }
@@ -420,11 +435,43 @@ app.get("/exportar-todo", (req, res) => {
       MAX(CASE WHEN l.pregunta = 7 THEN l.respuesta END) AS L7,
       MAX(CASE WHEN l.pregunta = 8 THEN l.respuesta END) AS L8,
       MAX(CASE WHEN l.pregunta = 9 THEN l.respuesta END) AS L9,
-      MAX(CASE WHEN l.pregunta = 10 THEN l.respuesta END) AS L10
+      MAX(CASE WHEN l.pregunta = 10 THEN l.respuesta END) AS L10,
+
+      -- Likert pos-tarea
+      MAX(CASE WHEN lp.pregunta = 1 AND lp.item = 1 THEN lp.respuesta END) AS PT1_1,
+      MAX(CASE WHEN lp.pregunta = 1 AND lp.item = 2 THEN lp.respuesta END) AS PT1_2,
+      MAX(CASE WHEN lp.pregunta = 1 AND lp.item = 3 THEN lp.respuesta END) AS PT1_3,
+      MAX(CASE WHEN lp.pregunta = 1 AND lp.item = 4 THEN lp.respuesta END) AS PT1_4,
+      MAX(CASE WHEN lp.pregunta = 1 AND lp.item = 5 THEN lp.respuesta END) AS PT1_5,
+
+      MAX(CASE WHEN lp.pregunta = 2 AND lp.item = 1 THEN lp.respuesta END) AS PT2_1,
+      MAX(CASE WHEN lp.pregunta = 2 AND lp.item = 2 THEN lp.respuesta END) AS PT2_2,
+      MAX(CASE WHEN lp.pregunta = 2 AND lp.item = 3 THEN lp.respuesta END) AS PT2_3,
+      MAX(CASE WHEN lp.pregunta = 2 AND lp.item = 4 THEN lp.respuesta END) AS PT2_4,
+      MAX(CASE WHEN lp.pregunta = 2 AND lp.item = 5 THEN lp.respuesta END) AS PT2_5,
+
+      MAX(CASE WHEN lp.pregunta = 3 AND lp.item = 1 THEN lp.respuesta END) AS PT3_1,
+      MAX(CASE WHEN lp.pregunta = 3 AND lp.item = 2 THEN lp.respuesta END) AS PT3_2,
+      MAX(CASE WHEN lp.pregunta = 3 AND lp.item = 3 THEN lp.respuesta END) AS PT3_3,
+      MAX(CASE WHEN lp.pregunta = 3 AND lp.item = 4 THEN lp.respuesta END) AS PT3_4,
+      MAX(CASE WHEN lp.pregunta = 3 AND lp.item = 5 THEN lp.respuesta END) AS PT3_5,
+
+      MAX(CASE WHEN lp.pregunta = 4 AND lp.item = 1 THEN lp.respuesta END) AS PT4_1,
+      MAX(CASE WHEN lp.pregunta = 4 AND lp.item = 2 THEN lp.respuesta END) AS PT4_2,
+      MAX(CASE WHEN lp.pregunta = 4 AND lp.item = 3 THEN lp.respuesta END) AS PT4_3,
+      MAX(CASE WHEN lp.pregunta = 4 AND lp.item = 4 THEN lp.respuesta END) AS PT4_4,
+      MAX(CASE WHEN lp.pregunta = 4 AND lp.item = 5 THEN lp.respuesta END) AS PT4_5,
+
+      MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 1 THEN lp.respuesta END) AS PT5_1,
+      MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 2 THEN lp.respuesta END) AS PT5_2,
+      MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 3 THEN lp.respuesta END) AS PT5_3,
+      MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 4 THEN lp.respuesta END) AS PT5_4,
+      MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 5 THEN lp.respuesta END) AS PT5_5 
 
     FROM usuarios u
     LEFT JOIN respuestas r ON u.id = r.usuario_id
     LEFT JOIN likert l ON u.id = l.usuario_id
+    LEFT JOIN likert_pregunta lp ON u.id = lp.usuario_id
     GROUP BY u.id
     ORDER BY u.id;
   `;
@@ -466,7 +513,32 @@ app.get("/exportar-todo", (req, res) => {
       L7: fila.L7,
       L8: fila.L8,
       L9: fila.L9,
-      L10: fila.L10
+      L10: fila.L10,
+      PT1_1: fila.PT1_1,
+      PT1_2: fila.PT1_2,
+      PT1_3: fila.PT1_3,
+      PT1_4: fila.PT1_4,
+      PT1_5: fila.PT1_5,
+      PT2_1: fila.PT2_1,
+      PT2_2: fila.PT2_2,
+      PT2_3: fila.PT2_3,
+      PT2_4: fila.PT2_4,
+      PT2_5: fila.PT2_5,
+      PT3_1: fila.PT3_1,
+      PT3_2: fila.PT3_2,
+      PT3_3: fila.PT3_3,
+      PT3_4: fila.PT3_4,
+      PT3_5: fila.PT3_5,
+      PT4_1: fila.PT4_1,
+      PT4_2: fila.PT4_2,
+      PT4_3: fila.PT4_3,
+      PT4_4: fila.PT4_4,
+      PT4_5: fila.PT4_5,
+      PT5_1: fila.PT5_1,
+      PT5_2: fila.PT5_2,
+      PT5_3: fila.PT5_3,
+      PT5_4: fila.PT5_4,
+      PT5_5: fila.PT5_5
     }));
 
     const writer = createObjectCsvWriter({
@@ -501,7 +573,32 @@ app.get("/exportar-todo", (req, res) => {
         { id: "L7", title: "Likert 7" },
         { id: "L8", title: "Likert 8" },
         { id: "L9", title: "Likert 9" },
-        { id: "L10", title: "Likert 10" }
+        { id: "L10", title: "Likert 10" },
+        { id: "PT1_1", title: "PosTarea 1.1" },
+        { id: "PT1_2", title: "PosTarea 1.2" },
+        { id: "PT1_3", title: "PosTarea 1.3" },
+        { id: "PT1_4", title: "PosTarea 1.4" },
+        { id: "PT1_5", title: "PosTarea 1.5" },
+        { id: "PT2_1", title: "PosTarea 2.1" },
+        { id: "PT2_2", title: "PosTarea 2.2" },
+        { id: "PT2_3", title: "PosTarea 2.3" },
+        { id: "PT2_4", title: "PosTarea 2.4" },
+        { id: "PT2_5", title: "PosTarea 2.5" },
+        { id: "PT3_1", title: "PosTarea 3.1" },
+        { id: "PT3_2", title: "PosTarea 3.2" },
+        { id: "PT3_3", title: "PosTarea 3.3" },
+        { id: "PT3_4", title: "PosTarea 3.4" },
+        { id: "PT3_5", title: "PosTarea 3.5" },
+        { id: "PT4_1", title: "PosTarea 4.1" },
+        { id: "PT4_2", title: "PosTarea 4.2" },
+        { id: "PT4_3", title: "PosTarea 4.3" },
+        { id: "PT4_4", title: "PosTarea 4.4" },
+        { id: "PT4_5", title: "PosTarea 4.5" },
+        { id: "PT5_1", title: "PosTarea 5.1" },
+        { id: "PT5_2", title: "PosTarea 5.2" },
+        { id: "PT5_3", title: "PosTarea 5.3" },
+        { id: "PT5_4", title: "PosTarea 5.4" },
+        { id: "PT5_5", title: "PosTarea 5.5" }
       ]
     });
 
