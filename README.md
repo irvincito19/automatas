@@ -1,4 +1,4 @@
-# Sistema de Evaluación Académica
+# Sistema de Evaluación Académica para Ejercicios de Autómatas
 
 ## Descripción
 Sistema web para administrar evaluaciones con cuestionarios Likert. Incluye 5 ejercicios matemáticos con cuestionarios post-tarea y un cuestionario general final.
@@ -15,101 +15,105 @@ Sistema web para administrar evaluaciones con cuestionarios Likert. Incluye 5 ej
    ```bash
    npm install express ejs sqlite3 csv-writer
 
+## Preparación
 
-Colocar imágenes de ejercicios en public/:
+### Colocar imágenes de ejercicios en `public/`
 
-p1.png, p2.png, p3.png, p4.png, p5.png
+Asegúrate de colocar las siguientes imágenes dentro de la carpeta `public/`:
 
-Ejecutar el servidor:
+- `p1.png`
+- `p2.png`
+- `p3.png`
+- `p4.png`
+- `p5.png`
 
-bash
-node server.js
-Abrir en el navegador: http://localhost:3003
+## Ejecución del Servidor
 
-Estructura del Proyecto
-text
-/
-├── server.js          # Servidor principal
-├── db.sqlite         # Base de datos
-├── package.json      # Dependencias
-├── public/           # Archivos estáticos
-│   ├── p1.png       # Imágenes
-│   └── bootstrap.min.css
-└── views/            # Plantillas EJS
-    ├── registro.ejs
-    ├── pregunta.ejs
-    ├── likert_pregunta.ejs
-    ├── likert.ejs
-    ├── final.ejs
-    └── resultados.ejs
-Rutas Principales
-/registro - Formulario de datos del estudiante
+Ejecutar el servidor con el siguiente comando:
+   ```bash
+   node server.js
+   ```
+# Rutas Principales del Proyecto
 
-/pregunta/1 a /pregunta/5 - Ejercicios
+## 📋 Formularios
+- **`/registro`** - Formulario de datos del estudiante
+- **`/final`** - Página de finalización del estudio
 
-/likert-pregunta/1 a /likert-pregunta/5 - Cuestionario post-tarea
+## 📝 Ejercicios
+- **`/pregunta/1`** a **`/pregunta/5`** - Ejercicios de programación
 
-/likert - Cuestionario general final
+## 📊 Cuestionarios
+- **`/likert-pregunta/1`** a **`/likert-pregunta/5`** - Cuestionario post-tarea (por ejercicio)
+- **`/likert`** - Cuestionario general final
 
-/final - Página de finalización
+## 🔧 Administración
+- **`/resultados`** - Panel de administración y visualización de datos
+- **`/exportar-todo`** - Descargar todos los datos en formato CSV
 
-/resultados - Panel de administración
+## Base de Datos
 
-/exportar-todo - Descargar todos los datos en CSV
+### 🗃️ Tablas Automáticamente Creadas
 
-Base de Datos
-Se crean 4 tablas automáticamente:
+| Tabla | Descripción | Contenido Principal |
+|-------|-------------|---------------------|
+| **`usuarios`** | Datos demográficos de los participantes | Información personal, fecha de registro, etc. |
+| **`respuestas`** | Respuestas a los ejercicios | Soluciones, tiempos de respuesta, etc. |
+| **`likert`** | Respuestas del cuestionario general | Valoraciones escala Likert general |
+| **`likert_pregunta`** | Respuestas post-tarea | Valoraciones por ejercicio individual |
 
-usuarios - Datos demográficos
+## Exportación de Datos
 
-respuestas - Respuestas a ejercicios
+### 📥 Rutas de Exportación
 
-likert - Respuestas cuestionario general
+| Ruta | Descripción | Formato |
+|------|-------------|---------|
+| **`/exportar/:id`** | Exportación individual de un usuario específico | CSV |
+| **`/exportar-todo`** | Exportación completa de todos los datos | CSV |
 
-likert_pregunta - Respuestas post-tarea
+### 📊 Contenido Exportado
+Los archivos CSV incluyen:
+- ✅ **Datos demográficos** completos de los usuarios
+- ✅ **Tiempos** de respuesta por cada ejercicio
+- ✅ **Respuestas Likert** de todos los cuestionarios
+- ✅ **Metadatos** del estudio
 
-Exportación de Datos
-Individual: /exportar/:id - CSV de un usuario
+---
 
-Completo: /exportar-todo - CSV con todos los datos
+## ⚙️ Configuración
 
-Incluye: datos demográficos, tiempos, respuestas Likert
+### 🔧 Modificar en `server.js`:
 
-Configuración
-Modificar en server.js:
-
-Preguntas: preguntas, preguntasLikert, preguntasPosTarea
-
-Escalas Likert: escalaLikertPequeña, escalaLikertGrande
-
-Imágenes: actualizar nombres en array preguntas
-
-Solución de Problemas
+#### **1. Preguntas del Estudio**
+```javascript
+// Configuración de preguntas
+const preguntas = [ /* ... */ ];           // Ejercicios principales
+const preguntasLikert = [ /* ... */ ];     // Cuestionario general
+const preguntasPosTarea = [ /* ... */ ];   // Cuestionarios post-tarea
+```
+## Solución de Problemas
 Las respuestas post-tarea no se guardan
-Verificar que en likert_pregunta.ejs exista:
+ - Verificar que en likert_pregunta.ejs exista:
 
-html
+```html
 <input type="hidden" name="usuario" value="<%= usuario %>">
-Imágenes no se muestran
-Verificar que los archivos existan en public/
+```
 
-Nombres deben coincidir: p1.png, p2.png, etc.
+Imágenes no se muestran
+ - Verificar que los archivos existan en public/
+ - Nombres deben coincidir: p1.png, p2.png, etc.
 
 No se crea la base de datos
-Dar permisos de escritura
+ - Dar permisos de escritura
+ - Eliminar db.sqlite y reiniciar servidor
 
-Eliminar db.sqlite y reiniciar servidor
-
-Uso para Investigación
+## Uso para Investigación
 Los datos exportados incluyen:
 
 Tiempos por pregunta
 
-Respuestas a 5 preguntas post-tarea por ejercicio
+ - Respuestas a 5 preguntas post-tarea por ejercicio
+ - Respuestas a 10 preguntas generales
+ - Datos demográficos completos
 
-Respuestas a 10 preguntas generales
-
-Datos demográficos completos
-
-Licencia
+## Licencia
 Uso académico y de investigación.

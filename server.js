@@ -74,16 +74,16 @@ const preguntas = [
 // Preguntas Likert
 // -----------------------------
 const preguntasLikert = [
-  "Me sentí seguro resolviendo el examen",
-  "Las preguntas fueron claras",
-  "El tiempo fue suficiente",
-  "El nivel de dificultad fue adecuado",
-  "Me sentí preparado para el examen",
-  "Las instrucciones fueron claras",
-  "El examen evaluó mis conocimientos",
-  "Me sentí cómodo durante el examen",
-  "El formato del examen fue adecuado",
-  "Recomendaría este tipo de evaluación"
+  "Usar herramientas GenAI me ayuda a resolver ejercicios rápidamente",
+  "El apoyo de GenAI mejora mi comprensión de los conceptos",
+  "Uso GenAI principalmente para entender ideas, no para copiar respuestas",
+  "Prefiero tareas que permitan usar GenAI como apoyo",
+  "El uso de GenAI me hace menos interesado en profundizar por mi cuenta",
+  "Considero que GenAI debería estar regulado en las tareas de esta materia",
+  "Me preocupa depender demasiado de GenAI para resolver problemas",
+  "Creo que el uso de GenAI puede perjudicar el aprendizaje a largo plazo.",
+  "Me preocupa que usar GenAI pueda considerarse deshonestidad académica si no se cita",
+  "Siento que necesito formación para usar GenAI de manera responsable"
 ];
 
 const preguntasPosTarea = [
