@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="/bootstrap.min.css">
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-9">
+
+      <!-- TÍTULO -->
+      <div class="alert alert-info text-center shadow-sm">
+        <h4 class="mb-1">Reflexión después del ejercicio <%= pregunta %></h4>
+        <p class="mb-0">
+          Marca la opción que mejor represente tu experiencia al resolver este ejercicio.
+        </p>
+      </div>
+
+      <!-- FORMULARIO -->
+      <form method="POST" action="/likert-pregunta/<%= pregunta %>" class="card shadow-sm p-4">
+        
+        <!-- ocultos -->
+        <input type="hidden" name="usuario" value="<%= usuario %>">
+
+        <% preguntasPosTarea.forEach((item, i) => { %>
+          <div class="mb-4">
+
+            <!-- TEXTO DEL ÍTEM -->
+            <label class="form-label d-block mb-2">
+              <span class="badge bg-secondary me-2"><%= i + 1 %></span>
+              <strong><%= item %></strong>
+            </label>
+
+            <!-- ESCALA LIKERT -->
+            <div class="btn-group w-100" role="group" aria-label="Escala Likert">
+              <% escalaLikert.forEach((opcion, index) => { %>
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="p<%= i + 1 %>"
+                  id="p<%= i + 1 %>_<%= index %>"
+                  value="<%= opcion %>"
+                  required
+                >
+                <label class="btn btn-outline-primary" for="p<%= i + 1 %>_<%= index %>">
+                  <%= opcion %>
+                </label>
+              <% }) %>
+            </div>
+
+          </div>
+        <% }) %>
+
+        <hr>
+
+        <!-- BOTÓN -->
+        <div class="d-grid">
+          <button class="btn btn-success btn-lg">
+            Continuar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

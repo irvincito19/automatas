@@ -47,6 +47,15 @@ db.serialize(() => {
     respuesta TEXT,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
   )`);
+  db.run(`CREATE TABLE IF NOT EXISTS likert_pregunta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER,
+    pregunta INTEGER,
+    item INTEGER,
+    respuesta TEXT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+  )`);
+    
 });
 
 // -----------------------------
@@ -76,6 +85,15 @@ const preguntasLikert = [
   "El formato del examen fue adecuado",
   "Recomendaría este tipo de evaluación"
 ];
+
+const preguntasPosTarea = [
+  "Entendí lo que se pedía en el ejercicio",
+  "Después de este ejercicio, me siento más motivado(a) para seguir estudiando el tema",
+  "Sentí que resolví el ejercicio por mi propio criterio (sin depender de ayuda externa)",
+  "Creo que el ejercicio lo resolví de manera correcta",
+  "El apoyo de la herramienta GenAI me ayudó a entender mejor este ejercicio"
+];
+
 
 const escalaLikert = [
   "Nada",
@@ -188,7 +206,7 @@ app.post("/pregunta/:id", (req, res) => {
   const siguiente = parseInt(pregunta) + 1;
   if (siguiente > 5) return res.redirect(`/likert?u=${usuario}`);
 
-  res.redirect(`/pregunta/${siguiente}?u=${usuario}`);
+  res.redirect(`/likert-pregunta/${pregunta}?u=${usuario}`);
 });
 
 app.get("/likert", (req, res) => {
@@ -214,6 +232,43 @@ app.post("/likert", (req, res) => {
   });
 
   res.redirect(`/final?u=${usuario}`);
+});
+
+
+/// Likert post-tarea
+app.get("/likert-pregunta/:id", (req, res) => {
+  const usuario = req.query.u;
+  const pregunta = req.params.id;
+
+  res.render("likert_pregunta", {
+    usuario,
+    pregunta,
+    preguntasPosTarea,
+    escalaLikert
+  });
+});
+
+app.post("/likert-pregunta/:id", (req, res) => {
+  const usuario = req.body.usuario;
+  const pregunta = req.params.id;
+
+  preguntasPosTarea.forEach((_, index) => {
+    const respuesta = req.body[`p${index + 1}`];
+
+    db.run(
+      `INSERT INTO likert_pregunta (usuario_id, pregunta, item, respuesta)
+       VALUES (?, ?, ?, ?)`,
+      [usuario, pregunta, index + 1, respuesta]
+    );
+  });
+
+  const siguiente = parseInt(pregunta) + 1;
+
+  if (siguiente > 5) {
+    return res.redirect(`/likert?u=${usuario}`);
+  }
+
+  res.redirect(`/pregunta/${siguiente}?u=${usuario}`);
 });
 
 
