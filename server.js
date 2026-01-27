@@ -419,12 +419,13 @@ app.get("/exportar-todo", (req, res) => {
       u.inicio_examen,
       u.fin_examen,
       (strftime('%s', u.fin_examen) - strftime('%s', u.inicio_examen)) AS tiempo_total,
+      -- Tiempos por pregunta
+      t.p1 AS p1,
+      t.p2 AS p2,
+      t.p3 AS p3,
+      t.p4 AS p4,
+      t.p5 AS p5,
 
-      SUM(CASE WHEN r.pregunta = 1 THEN (strftime('%s', r.fin_pregunta) - strftime('%s', r.inicio_pregunta)) END) AS p1,
-      SUM(CASE WHEN r.pregunta = 2 THEN (strftime('%s', r.fin_pregunta) - strftime('%s', r.inicio_pregunta)) END) AS p2,
-      SUM(CASE WHEN r.pregunta = 3 THEN (strftime('%s', r.fin_pregunta) - strftime('%s', r.inicio_pregunta)) END) AS p3,
-      SUM(CASE WHEN r.pregunta = 4 THEN (strftime('%s', r.fin_pregunta) - strftime('%s', r.inicio_pregunta)) END) AS p4,
-      SUM(CASE WHEN r.pregunta = 5 THEN (strftime('%s', r.fin_pregunta) - strftime('%s', r.inicio_pregunta)) END) AS p5,
       -- Likert (promedios por usuario)
       MAX(CASE WHEN l.pregunta = 1 THEN l.respuesta END) AS L1,
       MAX(CASE WHEN l.pregunta = 2 THEN l.respuesta END) AS L2,
@@ -469,11 +470,22 @@ app.get("/exportar-todo", (req, res) => {
       MAX(CASE WHEN lp.pregunta = 5 AND lp.item = 5 THEN lp.respuesta END) AS PT5_5 
 
     FROM usuarios u
-    LEFT JOIN respuestas r ON u.id = r.usuario_id
+
+    LEFT JOIN (
+      SELECT 
+        usuario_id,
+        SUM(CASE WHEN pregunta = 1 THEN (strftime('%s', fin_pregunta) - strftime('%s', inicio_pregunta)) END) AS p1,
+        SUM(CASE WHEN pregunta = 2 THEN (strftime('%s', fin_pregunta) - strftime('%s', inicio_pregunta)) END) AS p2,
+        SUM(CASE WHEN pregunta = 3 THEN (strftime('%s', fin_pregunta) - strftime('%s', inicio_pregunta)) END) AS p3,
+        SUM(CASE WHEN pregunta = 4 THEN (strftime('%s', fin_pregunta) - strftime('%s', inicio_pregunta)) END) AS p4,
+        SUM(CASE WHEN pregunta = 5 THEN (strftime('%s', fin_pregunta) - strftime('%s', inicio_pregunta)) END) AS p5
+      FROM respuestas
+      GROUP BY usuario_id
+    ) t ON u.id = t.usuario_id
+
     LEFT JOIN likert l ON u.id = l.usuario_id
     LEFT JOIN likert_pregunta lp ON u.id = lp.usuario_id
-    GROUP BY u.id
-    ORDER BY u.id;
+    
   `;
 
   db.all(query, async (err, filas) => {

@@ -3,12 +3,115 @@
 <div class="container mt-5">
   <h3>Pregunta <%= pregunta.id %></h3>
   <p><%= pregunta.texto %></p>
+  
+  <div class="mb-3">
+    <strong>⏱️ Tiempo restante: </strong><span id="contador">10:00</span>
+    <small class="text-muted d-block">Puedes enviar en cualquier momento o esperar a que finalice automáticamente.</small>
+  </div>
 
   <img src="/<%= pregunta.img %>" class="img-fluid mb-3" />
 
-  <form method="POST">
+  <form method="POST" id="formPregunta">
     <input type="hidden" name="usuario" value="<%= usuario %>">
-    <!--<input class="form-control" name="respuesta" placeholder="Tu respuesta" required><br>-->
-    <button class="btn btn-success">Siguiente</button>
+    <input type="hidden" name="tiempo_usado" id="tiempoUsado" value="0">
+    
+    <!-- Botón habilitado desde el inicio -->
+    <button id="btnSiguiente" class="btn btn-primary">
+      Siguiente
+    </button>
   </form>
 </div>
+
+<script>
+// Configuración del temporizador
+let tiempoRestante = 600; // 10 minutos en segundos
+let tiempoTranscurrido = 0;
+let intervalo;
+let enviado = false;
+
+const contador = document.getElementById('contador');
+const btnSiguiente = document.getElementById('btnSiguiente');
+const tiempoUsadoInput = document.getElementById('tiempoUsado');
+const form = document.getElementById('formPregunta');
+
+function actualizarContador() {
+  tiempoRestante--;
+  tiempoTranscurrido++;
+  
+  const minutos = Math.floor(tiempoRestante / 60);
+  const segundos = tiempoRestante % 60;
+  
+  // Formato MM:SS
+  contador.textContent = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+  
+  // Actualizar el tiempo usado en el input hidden
+  tiempoUsadoInput.value = tiempoTranscurrido;
+  
+  // Cambiar color del texto cuando quede poco tiempo
+  if (tiempoRestante <= 30) {
+    contador.style.color = '#dc3545';
+    contador.style.fontWeight = 'bold';
+  } else if (tiempoRestante <= 120) {
+    contador.style.color = '#ffc107';
+  }
+  
+  // Cuando el tiempo llega a 0
+  if (tiempoRestante <= 0) {
+    clearInterval(intervalo);
+    finalizarTiempo();
+  }
+}
+
+function finalizarTiempo() {
+  if (enviado) return; // Evitar envío doble
+  
+  enviado = true;
+  contador.textContent = '00:00';
+  contador.style.color = '#198754';
+  tiempoUsadoInput.value = 600; // Tiempo total usado
+  
+  // Actualizar el botón
+  btnSiguiente.textContent = 'Enviando...';
+  btnSiguiente.className = 'btn btn-success';
+  btnSiguiente.disabled = true;
+  
+  // Enviar formulario automáticamente después de 1 segundo
+  setTimeout(() => {
+    form.submit();
+  }, 1000);
+}
+
+// Iniciar el contador al cargar la página
+window.addEventListener('DOMContentLoaded', () => {
+  intervalo = setInterval(actualizarContador, 1000);
+  
+  // Configurar el botón para que registre el tiempo usado al enviar
+  form.addEventListener('submit', function(e) {
+    if (enviado) {
+      e.preventDefault();
+      return;
+    }
+    
+    // Si aún no ha terminado el tiempo, preguntar confirmación
+    if (tiempoRestante > 30) { // Solo preguntar si queda más de 30 segundos
+      if (!confirm(`¿Enviar respuesta ahora? Te quedan ${Math.floor(tiempoRestante/60)}:${tiempoRestante%60 < 10 ? '0' : ''}${tiempoRestante%60} minutos.`)) {
+        e.preventDefault();
+        return;
+      }
+    }
+    
+    // Detener el contador
+    clearInterval(intervalo);
+    
+    // Actualizar el tiempo usado
+    tiempoUsadoInput.value = tiempoTranscurrido;
+    
+    // Cambiar estado del botón
+    btnSiguiente.disabled = true;
+    btnSiguiente.textContent = 'Enviando...';
+    
+    // Marcar como enviado
+    enviado = true;
+  });
+});
+</script>
