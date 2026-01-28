@@ -28,7 +28,8 @@ db.serialize(() => {
     habla_dialecto INTEGER,
     grupo TEXT,
     inicio_examen TEXT,
-    fin_examen TEXT
+    fin_examen TEXT,
+    calificacion REAL
   )`);
 
   db.run(`CREATE TABLE IF NOT EXISTS respuestas (
@@ -62,11 +63,11 @@ db.serialize(() => {
 // Preguntas
 // -----------------------------
 const preguntas = [
-  { id: 1, texto: "Resuelve el ejercicio 1", img: "p1.png" },
-  { id: 2, texto: "Resuelve el ejercicio 2", img: "p2.png" },
-  { id: 3, texto: "Resuelve el ejercicio 3", img: "p3.png" },
-  { id: 4, texto: "Resuelve el ejercicio 4", img: "p4.png" },
-  { id: 5, texto: "Resuelve el ejercicio 5", img: "p5.png" }
+  { id: 1, texto: "Pasar la siguiente gramática a Forma Normal de Chomsky - Ejercicio 1", img: "p1.png" },
+  { id: 2, texto: "Pasar la siguiente gramática a Forma Normal de Chomsky - Ejercicio 2", img: "p2.png" },
+  { id: 3, texto: "Pasar la siguiente gramática a Forma Normal de Chomsky - Ejercicio 3", img: "p3.png" },
+  { id: 4, texto: "Pasar la siguiente gramática a Forma Normal de Chomsky - Ejercicio 4", img: "p4.png" },
+  { id: 5, texto: "Pasar la siguiente gramática a Forma Normal de Chomsky - Ejercicio 5", img: "p5.png" }
 ];
 
 
@@ -376,6 +377,7 @@ app.get("/resultados", (req, res) => {
       u.grupo,
       u.inicio_examen,
       u.fin_examen,
+      u.calificacion,
       (strftime('%s', u.fin_examen) - strftime('%s', u.inicio_examen)) AS tiempo_total,
 
       -- Tiempos por pregunta
@@ -418,6 +420,7 @@ app.get("/exportar-todo", (req, res) => {
       u.grupo,
       u.inicio_examen,
       u.fin_examen,
+      u.calificacion,
       (strftime('%s', u.fin_examen) - strftime('%s', u.inicio_examen)) AS tiempo_total,
       -- Tiempos por pregunta
       t.p1 AS p1,
@@ -485,7 +488,8 @@ app.get("/exportar-todo", (req, res) => {
 
     LEFT JOIN likert l ON u.id = l.usuario_id
     LEFT JOIN likert_pregunta lp ON u.id = lp.usuario_id
-    
+    GROUP BY u.id
+    ORDER BY u.id ASC
   `;
 
   db.all(query, async (err, filas) => {
@@ -510,6 +514,7 @@ app.get("/exportar-todo", (req, res) => {
       grupo: fila.grupo,
       inicio_examen: fila.inicio_examen,
       fin_examen: fila.fin_examen,
+      calificacion: fila.calificacion,
       tiempo_total: fila.tiempo_total,
       p1: fila.p1 || 0,
       p2: fila.p2 || 0,
@@ -570,6 +575,7 @@ app.get("/exportar-todo", (req, res) => {
         { id: "grupo", title: "Grupo" },
         { id: "inicio_examen", title: "Inicio Examen" },
         { id: "fin_examen", title: "Fin Examen" },
+        { id: "calificacion", title: "Calificación" },
         { id: "tiempo_total", title: "Tiempo Total (s)" },
         { id: "p1", title: "P1 Tiempo (s)" },
         { id: "p2", title: "P2 Tiempo (s)" },
@@ -666,6 +672,25 @@ app.get("/debug-usuarios", (req, res) => {
     res.json(rows);
   });
 });
+
+
+app.post("/calificar", (req, res) => {
+  const { id, calificacion } = req.body;
+
+  db.run(
+    "UPDATE usuarios SET calificacion=? WHERE id=?",
+    [calificacion, id],
+    err => {
+      if (err) {
+        console.error(err);
+        return res.send("Error al guardar calificación");
+      }
+      res.redirect("/resultados");
+    }
+  );
+});
+
+
 
 // -----------------------------
 app.listen(3003, () =>
