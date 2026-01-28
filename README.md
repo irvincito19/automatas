@@ -116,4 +116,8 @@ Tiempos por pregunta
  - Datos demográficos completos
 
 ## Licencia
+<<<<<<< HEAD
 Uso académico y de investigación.
+=======
+Uso académico y de investigación.
+>>>>>>> feature/readme
